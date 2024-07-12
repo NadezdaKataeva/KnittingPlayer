@@ -1,9 +1,17 @@
 <html>
 	<head>
+		<script src="script/reader.js"></script>
 		<title>Player Redux 
 		</title> 
 	</head>
 	<body>
-	Progress goes here
+	Progress goes here <br>
+	<form id="numInputs" style="border:2px solid black;display:inline-block; padding:3px;"> 
+		<label for="nRows" > Number of rows:</label> <input id="nRows" type="number" value="10" /> <br> <br>
+		<label for="nCols" > Number of cols:</label> <input id="nCols" type="number" value="5" /> <br> <br>
+		<input type="button" onclick="alert('didnt make this far')" value="Generate table"> <br>
+	</form>
 	</body>
+	<table id="mainTable">
+	</table>
 </html>
