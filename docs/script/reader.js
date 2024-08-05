@@ -19,20 +19,28 @@ function generate(){ // user presses "generate table", table is generated with t
     for(let r = 1; r <= nr; r++){
         tableText += "<tr>";
         for(let c = 0; c < nc; c++){
-            tableText += `<td id = "b${r}-${c}" onmouseover="mousedOver(${r}, ${c})" onmouseout="mousedOut(${r}, ${c})"> O</td> `; 
+            tableText += 
+            `<td id = "b${r}-${c}" 
+                onmouseover="mousedOver(${r}, ${c})" 
+                onmouseout="mousedOut(${r}, ${c})" 
+                onclick="onTap(${r}, ${c})"
+                ontouchstart="onTap(${r}, ${c})"> O </td> `; // theoretically for mobile, maybe not needed
         }
         tableText += "</tr>\n";
     }
-    console.log(tableText);
+    //console.log(tableText);
     document.getElementById("mainTable").innerHTML = tableText;
 
 }
 
 function mousedOver(u, v){
-    console.log(u, v);
+    //console.log(u, v);
     document.getElementById(`b${u}-${v}`).style.color = "red";
 
 }
 function mousedOut(u,v){
     document.getElementById(`b${u}-${v}`).style.color = "black";
+}
+function onTap(u,v){
+    console.log(`userclick on ${u}, ${v}`);
 }
