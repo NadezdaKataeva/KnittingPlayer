@@ -6,6 +6,12 @@ var nr = 0;
 var readHeadRow = 0;
 var readHeadCol = 0;
 
+var state = "readPaused"; // {readPlaying, readPaused, edit}
+// under read: the play button starts/stops playing, tapping on a cell moves the read head and pause
+// under write: the play button does nothing, tapping changes something
+
+var writeColor = "purple";
+
 
 function generate(){ // user presses "generate table", table is generated with the 
     nr = document.getElementById("nRows").value;
@@ -20,7 +26,7 @@ function generate(){ // user presses "generate table", table is generated with t
         tableText += "<tr>";
         for(let c = 0; c < nc; c++){
             tableText += 
-            `<td id = "b${r}-${c}" 
+            `<td id="b${r}-${c}" 
                 onmouseover="mousedOver(${r}, ${c})" 
                 onmouseout="mousedOut(${r}, ${c})" 
                 onclick="onTap(${r}, ${c})"
@@ -35,12 +41,33 @@ function generate(){ // user presses "generate table", table is generated with t
 
 function mousedOver(u, v){
     //console.log(u, v);
-    document.getElementById(`b${u}-${v}`).style.color = "red";
+    //document.getElementById(`b${u}-${v}`).style.color = "red";
 
 }
 function mousedOut(u,v){
-    document.getElementById(`b${u}-${v}`).style.color = "black";
+    if(u != readHeadRow && v != readHeadCol)
+        document.getElementById(`b${u}-${v}`).style.color = "black";
 }
+
+
 function onTap(u,v){
     console.log(`userclick on ${u}, ${v}`);
+
+    if(state == "readPaused" || state == "readPlaying"){
+        document.getElementById(`b${readHeadRow}-${readHeadCol}`).style.borderStyle = "none";
+        state = "readPaused";
+
+    }
+
+    readHeadRow = u;
+    readHeadCol = v;
+
+    if(state == "readPaused" || state == "readPlaying"){
+        document.getElementById(`b${u}-${v}`).style.borderStyle = "solid";
+        state = "readPaused";
+
+    }
+    else{ // state = "edit"
+        document.getElementById(`b${u}-${v}`).style.color = writeColor;
+    }
 }
