@@ -3,7 +3,7 @@ var nc = 0;
 var nr = 0;
 
 // when dictating, the position of the "cursor"
-var readHeadRow = 0;
+var readHeadRow = 1;
 var readHeadCol = 0;
 
 var state = "readPaused"; // {readPlaying, readPaused, edit}
@@ -11,6 +11,8 @@ var state = "readPaused"; // {readPlaying, readPaused, edit}
 // under write: the play button does nothing, tapping changes something
 
 var writeColor = "purple";
+
+let time = 200; // delay between speech
 
 
 function generate(){ // user presses "generate table", table is generated with the 
@@ -36,17 +38,15 @@ function generate(){ // user presses "generate table", table is generated with t
     }
     //console.log(tableText);
     document.getElementById("mainTable").innerHTML = tableText;
-
 }
 
 function mousedOver(u, v){
     //console.log(u, v);
-    //document.getElementById(`b${u}-${v}`).style.color = "red";
+    //document.getElementById(`b${u}-${v}`).style.borderColor = "black";
 
 }
 function mousedOut(u,v){
-    if(u != readHeadRow && v != readHeadCol)
-        document.getElementById(`b${u}-${v}`).style.color = "black";
+    //document.getElementById(`b${u}-${v}`).style.borderColor = "white";
 }
 
 
@@ -54,20 +54,62 @@ function onTap(u,v){
     console.log(`userclick on ${u}, ${v}`);
 
     if(state == "readPaused" || state == "readPlaying"){
-        document.getElementById(`b${readHeadRow}-${readHeadCol}`).style.borderStyle = "none";
         state = "readPaused";
-
+        document.getElementById(`b${readHeadRow}-${readHeadCol}`).style.borderColor = "white";
     }
 
     readHeadRow = u;
     readHeadCol = v;
 
     if(state == "readPaused" || state == "readPlaying"){
-        document.getElementById(`b${u}-${v}`).style.borderStyle = "solid";
+        document.getElementById(`b${u}-${v}`).style.borderColor = "black";
         state = "readPaused";
 
     }
     else{ // state = "edit"
         document.getElementById(`b${u}-${v}`).style.color = writeColor;
+    }
+}
+
+function pushedPlayPause(){
+    if(state == "readPaused"){
+        state = "readPlaying";
+    }
+    else{
+        state = "readPaused";
+    }
+
+    if(state == "readPlaying"){
+        announce();
+        //setInterval(announce, time);
+    }
+
+}
+
+function pushedChangeState(){
+    if(state == "edit") state = "readPaused";
+    else                state = "edit";
+}
+
+function announce(){
+    if(state == "readPlaying"){
+        if(readHeadRow == nr){
+            readHeadRow = 1; 
+        }
+
+        console.log(`Speaking ${readHeadRow}, ${readHeadCol}`);
+        document.getElementById(`b${readHeadRow}-${readHeadCol}`).style.borderColor = "white";
+       
+        readHeadCol++;
+        if(readHeadCol == nc){
+            readHeadCol = 0;
+            readHeadRow += 1;
+        }
+        if(readHeadRow == nr){
+            readHeadRow = 1; 
+        }
+        document.getElementById(`b${readHeadRow}-${readHeadCol}`).style.borderColor = "black";
+
+        setTimeout(announce, time);
     }
 }

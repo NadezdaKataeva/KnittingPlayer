@@ -12,6 +12,11 @@
 		<label for="nCols" > Number of cols:</label> <input id="nCols" type="number" value="5" /> <br> <br>
 		<input type="button" onclick="generate()" value="Generate table"> <br>
 	</form>
+	<form id="stateSelection" style="border:2px solid black;display:inline-block; padding:3px;">
+		<input id="playPauseButton" onclick="pushedPlayPause()" type="button" > Play/Pause </input>  <br>
+		<input id="changeState" onclick="pushedChangeState()" type="button" > Change state </input>  <br>
+
+	</form>
 	</body>
 	<table id="mainTable">
 	</table>

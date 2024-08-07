@@ -1,4 +1,5 @@
 td {
     cursor: crosshair;
-    
+    border: solid;
+    border-color: white;
 }
