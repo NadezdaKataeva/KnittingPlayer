@@ -12,7 +12,9 @@ var state = "readPaused"; // {readPlaying, readPaused, edit}
 
 var writeColor = "purple";
 
-let time = 200; // delay between speech
+var time = 600; // delay between speech
+var playerID = null;
+var speaker = new SpeechSynthesisUtterance();
 
 
 function generate(){ // user presses "generate table", table is generated with the 
@@ -77,11 +79,13 @@ function pushedPlayPause(){
     }
     else{
         state = "readPaused";
+        clearInterval(playerID);
+        playerID = null;
     }
 
     if(state == "readPlaying"){
-        announce();
-        //setInterval(announce, time);
+        //announce();
+        playerID = setInterval(announce, time);
     }
 
 }
@@ -92,24 +96,22 @@ function pushedChangeState(){
 }
 
 function announce(){
-    if(state == "readPlaying"){
-        if(readHeadRow == nr){
-            readHeadRow = 1; 
-        }
+    
+    console.log(`Speaking ${readHeadRow}, ${readHeadCol}`);
 
-        console.log(`Speaking ${readHeadRow}, ${readHeadCol}`);
-        document.getElementById(`b${readHeadRow}-${readHeadCol}`).style.borderColor = "white";
-       
-        readHeadCol++;
-        if(readHeadCol == nc){
-            readHeadCol = 0;
-            readHeadRow += 1;
-        }
-        if(readHeadRow == nr){
-            readHeadRow = 1; 
-        }
-        document.getElementById(`b${readHeadRow}-${readHeadCol}`).style.borderColor = "black";
+    speaker.text = document.getElementById(`b${readHeadRow}-${readHeadCol}`).innerText;
+    window.speechSynthesis.speak(speaker);
 
-        setTimeout(announce, time);
+
+    document.getElementById(`b${readHeadRow}-${readHeadCol}`).style.borderColor = "white";
+    
+    readHeadCol += 1;
+    if(readHeadCol >= nc){
+        readHeadCol = 0;
+        readHeadRow += 1;
+        if(readHeadRow > nr) readHeadRow = 1;
     }
+    document.getElementById(`b${readHeadRow}-${readHeadCol}`).style.borderColor = "black";
+
+    //setTimeout(announce, time);
 }
